@@ -29,8 +29,12 @@ const Make = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
+  
+  
+
   useEffect(() => {
     makeStore.getData();
+    
   }, []);
 
   const handleDelete = (id) => {
@@ -54,6 +58,7 @@ const Make = () => {
 
   const handlePaged = (currentPage, pageSize) => {
     console.log(currentPage);
+    
     if (currentPage > 0) {
       setCurrentPage(currentPage);
       makeStore.getPaged(currentPage, pageSize);

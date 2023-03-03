@@ -1,5 +1,5 @@
 import { observable, action, makeObservable } from "mobx";
-import axios from "axios";
+import { getVehicleModels, postVehicleModel, deleteVehicleModel, getVehicleModelsOrderBy, getVehicleModelsFilterBy, getPagedVehicleModels} from '../api/apiModelService';
 
 class ModelStore {
   constructor() {
@@ -16,8 +16,7 @@ class ModelStore {
   dataModel = [];
 
   getData = () => {
-    axios
-      .get("http://localhost:5161/api/VehicleModel/VehicleModels")
+    getVehicleModels()
       .then((result) => {
         this.dataModel = result.data;
       })
@@ -27,14 +26,12 @@ class ModelStore {
   };
 
   saveData = (abrv, name, vehicleMakeEntityId) => {
-    const url = "http://localhost:5161/api/VehicleModel";
     const dataModel = {
       name: name,
       abrv: abrv,
       vehicleMakeEntityId: vehicleMakeEntityId,
     };
-    axios
-      .post(url, dataModel)
+      postVehicleModel(dataModel)
       .then((result) => {
         this.getData();
       })
@@ -45,8 +42,7 @@ class ModelStore {
 
   deleteData = (id) => {
     if (window.confirm("Confirm to delete") === true) {
-      axios
-        .delete(`http://localhost:5161/api/VehicleModel/${id}`)
+      deleteVehicleModel(id)
         .then((result) => {
           this.getData();
         })
@@ -57,10 +53,7 @@ class ModelStore {
   };
 
   orderBy = (ascendingOrder) => {
-    axios
-      .get(
-        `http://localhost:5161/api/VehicleModel/VehicleModelsOrderBy?ascending=${ascendingOrder}`
-      )
+    getVehicleModelsOrderBy(ascendingOrder)
       .then((result) => {
         this.dataModel = result.data;
       })
@@ -71,8 +64,7 @@ class ModelStore {
 
   getModelList = (name) => {
     try {
-      axios
-        .get(`http://localhost:5161/api/VehicleModel/VehicleModelsFilterBy?name=${name}`)
+      getVehicleModelsFilterBy(name)
         .then((result) => {
           this.dataModel = result.data;
         });
@@ -83,10 +75,7 @@ class ModelStore {
 
   getPaged = (pageNumber, pageSize) => {
     try {
-      axios
-        .get(
-          `http://localhost:5161/api/VehicleModel/PagedVehicleModels?PageNumber=${pageNumber}&PageSize=${pageSize}`
-        )
+      getPagedVehicleModels(pageNumber, pageSize)
         .then((result) => {
           this.dataModel = result.data;
         });

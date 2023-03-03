@@ -1,5 +1,5 @@
-import { observable, action, makeObservable } from "mobx";
-import axios from "axios";
+import { observable, action, makeObservable } from 'mobx';
+import { getVehicleMakes, postVehicleMake, deleteVehicleMake, getVehicleMakesOrderBy, getVehicleMakesFilterBy, getPagedVehicleMakes } from '../api/apiMakeService';
 
 class MakeStore {
   constructor() {
@@ -16,8 +16,7 @@ class MakeStore {
   data = [];
 
   getData = () => {
-    axios
-      .get("http://localhost:5161/api/VehicleMakes")
+    getVehicleMakes()
       .then((result) => {
         this.data = result.data;
       })
@@ -27,13 +26,11 @@ class MakeStore {
   };
 
   saveData = (abrv, name) => {
-    const url = "http://localhost:5161/api/PostVehicleMake";
     const data = {
       abrv: abrv,
       name: name,
     };
-    axios
-      .post(url, data)
+    postVehicleMake(data)
       .then((result) => {
         this.getData();
       })
@@ -43,9 +40,8 @@ class MakeStore {
   };
 
   deleteData = (id) => {
-    if (window.confirm("Confirm to delete") === true) {
-      axios
-        .delete(`http://localhost:5161/api/${id}`)
+    if (window.confirm('Confirm to delete') === true) {
+      deleteVehicleMake(id)
         .then((result) => {
           this.getData();
         })
@@ -56,10 +52,7 @@ class MakeStore {
   };
 
   orderBy = (ascendingOrder) => {
-    axios
-      .get(
-        `http://localhost:5161/api/VehicleMakesOrderBy?ascending=${ascendingOrder}`
-      )
+    getVehicleMakesOrderBy(ascendingOrder)
       .then((result) => {
         this.data = result.data;
       })
@@ -70,8 +63,7 @@ class MakeStore {
 
   getMakeList = (name) => {
     try {
-      axios
-        .get(`http://localhost:5161/api/VehicleMakesFilterBy?name=${name}`)
+      getVehicleMakesFilterBy(name)
         .then((result) => {
           this.data = result.data;
         });
@@ -82,10 +74,7 @@ class MakeStore {
 
   getPaged = (pageNumber, pageSize) => {
     try {
-      axios
-        .get(
-          `http://localhost:5161/api/PagedVehicleMakes?PageNumber=${pageNumber}&PageSize=${pageSize}`
-        )
+      getPagedVehicleMakes(pageNumber, pageSize)
         .then((result) => {
           this.data = result.data;
         });
